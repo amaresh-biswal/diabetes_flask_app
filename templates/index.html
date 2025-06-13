@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Diabetes Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background-color: #121212;
+        color: #f0f0f0;
+        font-family: "Segoe UI", sans-serif;
+      }
+      .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background: #1e1e1e;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+      h2 {
+        text-align: center;
+        color: #00bcd4;
+        margin-bottom: 30px;
+      }
+      .form-label {
+        color: #ccc;
+      }
+      .form-control {
+        background-color: #2c2c2c;
+        color: #fff;
+        border: 1px solid #444;
+      }
+      .form-control:focus {
+        border-color: #00bcd4;
+        box-shadow: none;
+        background-color: #2c2c2c;
+        color: #fff;
+      }
+      .btn-primary {
+        width: 100%;
+        background-color: #00bcd4;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #0097a7;
+      }
+      .result {
+        margin-top: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #4caf50;
+      }
+      .spinner-border {
+        display: none;
+        margin: 10px auto;
+      }
+      .chart-container {
+        margin-top: 30px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2><i class="fas fa-heartbeat"></i> Diabetes Prediction</h2>
+      <form method="POST" action="/predict" onsubmit="showSpinner()">
+        {% for field in ["Pregnancies", "Glucose", "BloodPressure",
+        "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age"] %}
+        <div class="mb-3">
+          <label class="form-label"
+            ><i class="fas fa-notes-medical"></i> {{ field }}:</label
+          >
+          <input
+            type="number"
+            step="any"
+            name="{{ field }}"
+            class="form-control"
+            required
+          />
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-diagnoses"></i> Predict
+        </button>
+
+        <div class="spinner-border text-info mt-3" role="status" id="spinner">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </form>
+
+      {% if prediction_text %}
+      <div class="result">{{ prediction_text }}</div>
+      {% endif %}
+
+      <!-- Placeholder Chart (e.g., future trend of patient glucose levels) -->
+      <div class="chart-container" id="chartContainer">
+        <canvas id="healthChart" width="100%" height="80"></canvas>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FontAwesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      function showSpinner() {
+        document.getElementById("spinner").style.display = "block";
+      }
+
+      // Dummy Chart.js Usage (optional future data)
+      /*window.onload = function () {
+        const ctx = document.getElementById("healthChart");
+        if (ctx) {
+          document.getElementById("chartContainer").style.display = "block";
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+              datasets: [
+                {
+                  label: "Sample Glucose Trend",
+                  data: [85, 90, 95, 93, 92],
+                  borderColor: "#00bcd4",
+                  tension: 0.4,
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { labels: { color: "#ccc" } },
+              },
+              scales: {
+                x: { ticks: { color: "#aaa" } },
+                y: { ticks: { color: "#aaa" } },
+              },
+            },
+          });
+        }
+      };*/
+    </script>
+  </body>
+</html>
